@@ -1,0 +1,6 @@
+fastapi[all]
+grpcio
+grpcio-tools
+protobuf
+pydantic
+uvicorn

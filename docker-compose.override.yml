@@ -1,0 +1,26 @@
+services:
+  devserver:
+    image: paypwn-devserver:${PAYPWN_VERSION}
+    build:
+      context: .
+      dockerfile: ./devserver/Dockerfile
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+    environment:
+      DOCKER_BUILDKIT: 1
+    expose:
+      - "8443:8443"
+    volumes:
+      - ./paybuddy/vue:/var/paypwn/paybuddy/vue
+
+  paypwn:
+    volumes:
+      - ./paybuddy/python:/var/paypwn/paybuddy/python
+
+  postgres:
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+
+  nginx:
+    volumes:
+      - ./nginx/etc:/etc/nginx:ro

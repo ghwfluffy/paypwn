@@ -1,0 +1,53 @@
+[ ] python linter
+[ ] ts linter
+[ ] nginx config
+[ ] Dev server
+[ ] pina
+[ ] celery
+[ ] OpenAI integration
+[ ] Database
+    [ ] Schema
+    [ ] Initialize
+[ ] Fake data creation
+[ ] ColdMail
+    [ ] Landing page
+    [ ] Sign up
+    [ ] Login
+    [ ] Logout
+    [ ] Email list
+    [ ] Email view
+    [ ] Broken links
+        [ ] Compose
+        [ ] Reply/Forward
+[ ] PayBuddy
+    [ ] Landing page
+    [ ] Sign up
+    [ ] Login
+    [ ] Logout
+    [ ] Send money
+    [ ] Broken links
+        [ ] Add payment account
+        [ ] Add bank tranfer account
+        [ ] Fund wallet
+    [ ] Chat Bot
+[ ] FriendBook
+    [ ] Landing page
+    [ ] Sign up
+    [ ] Login
+    [ ] Logout
+    [ ] Person search
+    [ ] Broken links
+        [ ] Send friend request
+        [ ] Post status update
+    [ ] Advertiser REST API
+[ ] eBid
+    [ ] Landing page
+    [ ] Sign up
+    [ ] Login
+    [ ] Logout
+    [ ] Auction search
+    [ ] Broken links
+        [ ] Create bid
+    [ ] Buy auction
+        [ ] AI generated image
+[ ] Leaderboard

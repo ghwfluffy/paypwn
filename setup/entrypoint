@@ -1,0 +1,14 @@
+#!/bin/ash
+
+set -eu -o pipefail
+
+PIDS=""
+
+# Start paybuddy
+cd /var/paypwn/paybuddy
+source venv/bin/activate
+export PYTHONPATH=python:protopy
+python3 ./python/main.py &
+PIDS="${PIDS} ${!}"
+
+wait -n ${PIDS}

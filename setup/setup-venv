@@ -1,0 +1,25 @@
+#!/bin/sh
+
+set -eux -o pipefail
+
+# Build paybuddy back-end
+(
+    cd /var/paypwn/paybuddy
+
+    # Create virtual environment
+    python3 -m venv venv
+    source venv/bin/activate
+
+    # Install depdendencies
+    pip3 install --upgrade pip
+    pip3 install -r python/requirements.txt
+
+    # Compile protobuf to python
+    mkdir -p protopy
+    python3 -m grpc_tools.protoc \
+        -I=./api \
+        --python_out=./protopy \
+        --grpc_python_out=./protopy \
+        $(ls ./api)
+    rm -rf ./api
+)

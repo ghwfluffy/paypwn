@@ -1,0 +1,55 @@
+x-env: &environment
+  environment:
+    - DOCKER_BUILDKIT=1
+    # Version
+    - PAYPWN_VERSION=${PAYPWN_VERSION}
+    # Database parameters
+    - PGUSER=paypwn
+    - PGPASSWORD=paypwn
+    - POSTGRES_PASSWORD=paypwn
+    - PGPORT=5432
+    - PGHOST=postgres
+    - PGDATABASE=paypwn
+
+x-network: &network
+  networks:
+    - paypwn
+
+networks:
+  paypwn:
+    driver: bridge
+
+services:
+  paypwn:
+    image: paypwn:${PAYPWN_VERSION}
+    <<: [*network, *environment]
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+
+  postgres:
+    image: paypwn-postgres:${PAYPWN_VERSION}
+    <<: [*network, *environment]
+    build:
+      context: .
+      dockerfile: ./database/Dockerfile
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  nginx:
+    image: paypwn-nginx:${PAYPWN_VERSION}
+    <<: [*network]
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+    expose:
+      - "443:443"
+
+volumes:
+  pgdata:

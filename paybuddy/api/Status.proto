@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package paybuddy;
+
+message StatusRequest {
+    string context = 1;
+}
+
+message StatusResponse {
+    string context = 1;
+    string version = 2;
+}

@@ -1,0 +1,4 @@
+CREATE DATABASE paypwn;
+CREATE USER paypwn WITH ENCRYPTED PASSWORD 'paypwn';
+\c paypwn
+GRANT CREATE ON SCHEMA public TO paypwn;
