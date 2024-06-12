@@ -1,0 +1,8 @@
+#!/bin/ash
+
+set -eu
+
+# Lint with mypy
+source ./venv/bin/activate
+export PYTHONPATH=./protopy/mypy:./protopy:./protopy/pbdantic
+mypy --check-untyped-defs ./protopy/mypy ./protopy/pbdantic ./python

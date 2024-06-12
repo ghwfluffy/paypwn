@@ -32,13 +32,11 @@ The PayBuddy website has a customer support chat bot you can communicate with. Y
 
 ## Build
 
-The NPM packages and protobuf definitions need to be compiled before the docker images can be created. This will require bash and docker buildkit on the host machine. Host assumes
+Everything is built inside of docker containers. Docker compose can be used to build the containers.
 
 ```
-./build/build.sh
+docker compose build
 ```
-
-Any changes to the NPM packages.json or python requirements.txt will require running this build script again.
 
 ## Run
 
@@ -48,42 +46,90 @@ The built containers can be run with docker compose. This will result in port 44
 docker compose up -d
 ```
 
-If you do not want to expose the devserver port, you can ignore the dev docker compose override by using the following command instead.
+If you do not want to expose the devserver port, you can ignore the dev docker compose override by explicitly loading the docker-compose.yml file.
 
 ```
 docker compose -f docker-compose.yml up -d
 ```
 
+## Docker Containers
+
+### paypwn
+
+* paypwn container runs fastapi web apps for each service and listens on local TCP ports 8080-8083
+    * 8080: paybuddy
+    * 8081: ebid
+    * 8082: friendbook
+    * 8083: coldmail
+* paypwn runs celery workers for periodic tasks
+* paypwn communicates with the postgres container for persistent storage
+
+### postgres
+
+* postgres database is initialized on first start from database/init.sql
+* postgres listens on local TCP port 5432
+
+### nginx
+
+* nginx sits in front as an ingress and listens on port 443
+* nginx proxies API requests to the paypwn container over local TCP connections
+* nginx serves front-end resources from local vite distributables
+
+### devserver
+
+* devserver optionally sits in front of nginx and listens on port 8443
+* devserver is used to hot-reload changes to the vue files during front-end development
+* devserver proxies front-end requests to the mounted vue files, and all other requests to the nginx container
+
 ## Development
 
-### Dev server
+### Front-end
 
-Use port 8443 to see live updates to front-end changes
+#### Dev server
 
-### Add npm package
+Use port 8443 to see live updates to front-end changes.
 
-You can add an npm package by using the build container
+#### Add npm package
+
+You can add an npm package by using the devserver container.
 
 ```
-$ ./build/build.sh ash
-$ cd paybuddy/vue/
-$ npm install blah
+$ ./devserver/mount-console.sh
+devserver>~/git/paypwn$ cd paybuddy/vue
+devserver>~/git/paypwn/paybuddy/vue$ npm install blah
 ```
 
-### Load python changes
+### Back-end
 
-If you make a change to a python file, you can reload the running container with
+#### Python Changes
+
+If you make a change to a python file, you can reload the running container with docker compose. The local system python files are mounted into the container by the docker-compose.override.yml file and will load the changes from your local system on restart.
 
 ```
 docker compose restart paypwn
 ```
 
-### Load Protobuf changes
-
-You need to rerun the build script and restart the docker compose to load protobuf updates
+If you want to run the linter (mypy) on your python files, you can rebuild the docker images.
 
 ```
-./build/build.sh
+docker compose build
+```
+
+#### Protobuf Changes
+
+You need to rebuild the containers in order to compile new protobuf updates. Protobuf definitions are compiled to python, pydantic, and typescript.
+
+```
+docker compose build
 docker compose down
+docker compose up -d
+```
+
+#### Change SQL schema
+
+Updates to the SQL schema require editing ./database/init.sql and resetting the docker volumes.
+
+```
+docker compose down -v
 docker compose up -d
 ```

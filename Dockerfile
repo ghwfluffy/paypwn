@@ -7,26 +7,64 @@ ENV LANG="en_US.utf8"
 ENV LC_ALL="en_US.utf8"
 ENV LANGUAGE="en_US:en"
 
+ENV PS1="paypwn>\\w$ "
+
 # Dependencies
 RUN set -eux; \
     apk add --no-cache \
+        build-base \
+        npm \
         postgresql16-client \
-        python3 \
+        protobuf-dev \
         py3-virtualenv \
+        python3 \
+        python3-dev \
         ; \
     true
 
 # Copy web files
-COPY ./paybuddy/vue/dist /var/paypwn/paybuddy/www
+COPY ./paybuddy/vue /var/paypwn/paybuddy/vue
 COPY ./paybuddy/python /var/paypwn/paybuddy/python
 COPY ./paybuddy/api /var/paypwn/paybuddy/api
-
-# Setup runtime environment
+COPY ./mypy.ini /var/paypwn/paybuddy/
 COPY setup /setup
+
+# Build front-end
+ENV NPM_CONFIG_TMP="npm"
+ENV NPM_CONFIG_CACHE="npm"
+ENV NPM_CONFIG_PREFIX="npm"
 RUN set -eux; \
-    /setup/setup-venv; \
+    cd /var/paypwn/paybuddy; /setup/setup-vite; \
+    mv vue/dist www; \
+    true
+
+# Setup python runtime environment
+RUN set -eux; \
+    cd /var/paypwn/paybuddy; /setup/setup-venv; \
+    true
+
+# Lint python
+RUN set -eux; \
+    cd /var/paypwn/paybuddy; /setup/run-mypy; \
+    true
+
+# Entrypoint
+RUN set -eux; \
     cp -v /setup/entrypoint /var/paypwn/; \
+    true
+
+# Cleanup
+RUN set -eux; \
+    cd /var/paypwn/paybuddy; \
+    rm -rf api protopy/mypy vue mypy.ini .mypy_cache; \
     rm -rf /setup; \
+    apk del \
+        build-base \
+        npm \
+        protobuf-dev \
+        py3-virtualenv \
+        python3-dev \
+        ; \
     true
 
 # Expose the fastcgi apps

@@ -1,6 +1,6 @@
-[ ] python linter
 [ ] ts linter
 [ ] nginx config
+[ ] vite distributables into nginx container
 [ ] Dev server
 [ ] pina
 [ ] celery

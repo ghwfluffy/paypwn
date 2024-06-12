@@ -7,6 +7,8 @@ ENV LANG="en_US.utf8"
 ENV LC_ALL="en_US.utf8"
 ENV LANGUAGE="en_US:en"
 
+ENV PS1="nginx>\\w$ "
+
 RUN set -eux; \
     rm -rf /etc/nginx; \
     true

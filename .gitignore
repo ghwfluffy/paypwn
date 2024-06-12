@@ -2,3 +2,6 @@
 node_modules
 dist
 paybuddy/vue/npm/_*
+
+outfile.tmp
+commit-message.txt
