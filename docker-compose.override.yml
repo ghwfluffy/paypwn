@@ -1,6 +1,7 @@
 services:
   devserver:
     image: paypwn-devserver:${PAYPWN_VERSION}
+    restart: always
     build:
       context: .
       dockerfile: ./devserver/Dockerfile
@@ -23,4 +24,4 @@ services:
 
   nginx:
     volumes:
-      - ./nginx/etc:/etc/nginx:ro
+      - ./nginx/etc/sites:/etc/nginx/sites:ro

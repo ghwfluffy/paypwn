@@ -1,4 +1,3 @@
-[ ] nginx config
 [ ] vite distributables into nginx container
 [ ] Dev server
 [ ] github ci
@@ -51,3 +50,9 @@
     [ ] Buy auction
         [ ] AI generated image
 [ ] Leaderboard
+    [ ] favicon
+[ ] postgres backup/restore
+[ ] droplett
+[ ] tls cert
+[ ] dns
+[ ] SNI

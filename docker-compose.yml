@@ -23,6 +23,7 @@ services:
   paypwn:
     image: paypwn:${PAYPWN_VERSION}
     <<: [*network, *environment]
+    restart: always
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -32,6 +33,7 @@ services:
   postgres:
     image: paypwn-postgres:${PAYPWN_VERSION}
     <<: [*network, *environment]
+    restart: always
     build:
       context: .
       dockerfile: ./database/Dockerfile
@@ -43,6 +45,7 @@ services:
   nginx:
     image: paypwn-nginx:${PAYPWN_VERSION}
     <<: [*network]
+    restart: always
     build:
       context: .
       dockerfile: ./nginx/Dockerfile
