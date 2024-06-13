@@ -1,7 +1,7 @@
-[ ] ts linter
 [ ] nginx config
 [ ] vite distributables into nginx container
 [ ] Dev server
+[ ] github ci
 [ ] pina
 [ ] celery
 [ ] OpenAI integration

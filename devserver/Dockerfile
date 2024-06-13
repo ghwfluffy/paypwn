@@ -8,3 +8,14 @@ ENV LC_ALL="en_US.utf8"
 ENV LANGUAGE="en_US:en"
 
 ENV PS1="devserver>\\w$ "
+
+ENV NPM_CONFIG_TMP="npm"
+ENV NPM_CONFIG_CACHE="npm"
+ENV NPM_CONFIG_PREFIX="npm"
+
+# Dependencies
+RUN set -eux; \
+    apk add --no-cache \
+        npm \
+        ; \
+    true

@@ -5,15 +5,25 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "build": "npm run lint && npm run format && vue-tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint --fix src",
+    "format": "prettier --write .",
+    "lint-format": "npm run lint && npm run format"
   },
   "dependencies": {
     "ts-proto": "^1.178.0",
     "vue": "^3.4.21"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.13.0",
+    "@typescript-eslint/parser": "^7.13.0",
     "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/eslint-config-typescript": "^13.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.26.0",
+    "globals": "^15.4.0",
+    "prettier": "^3.3.2",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
     "vue-tsc": "^2.0.6"

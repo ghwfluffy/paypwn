@@ -14,4 +14,5 @@ docker run \
     -v "/etc/passwd:/etc/passwd:ro" \
     --user "$(id -u)" \
     --entrypoint ash \
-    "paypwn-devserver:${PAYPWN_VERSION}"
+    "paypwn-devserver:${PAYPWN_VERSION}" \
+    -c 'cd paybuddy/vue && npm install && npm run lint-format'

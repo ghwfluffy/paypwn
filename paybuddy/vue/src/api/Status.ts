@@ -23,7 +23,10 @@ function createBaseStatusRequest(): StatusRequest {
 }
 
 export const StatusRequest = {
-  encode(message: StatusRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: StatusRequest,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.context !== "") {
       writer.uint32(10).string(message.context);
     }
@@ -31,7 +34,8 @@ export const StatusRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StatusRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStatusRequest();
     while (reader.pos < end) {
@@ -54,7 +58,9 @@ export const StatusRequest = {
   },
 
   fromJSON(object: any): StatusRequest {
-    return { context: isSet(object.context) ? globalThis.String(object.context) : "" };
+    return {
+      context: isSet(object.context) ? globalThis.String(object.context) : "",
+    };
   },
 
   toJSON(message: StatusRequest): unknown {
@@ -65,10 +71,14 @@ export const StatusRequest = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StatusRequest>, I>>(base?: I): StatusRequest {
+  create<I extends Exact<DeepPartial<StatusRequest>, I>>(
+    base?: I,
+  ): StatusRequest {
     return StatusRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StatusRequest>, I>>(object: I): StatusRequest {
+  fromPartial<I extends Exact<DeepPartial<StatusRequest>, I>>(
+    object: I,
+  ): StatusRequest {
     const message = createBaseStatusRequest();
     message.context = object.context ?? "";
     return message;
@@ -80,7 +90,10 @@ function createBaseStatusResponse(): StatusResponse {
 }
 
 export const StatusResponse = {
-  encode(message: StatusResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: StatusResponse,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.context !== "") {
       writer.uint32(10).string(message.context);
     }
@@ -91,7 +104,8 @@ export const StatusResponse = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StatusResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStatusResponse();
     while (reader.pos < end) {
@@ -138,10 +152,14 @@ export const StatusResponse = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StatusResponse>, I>>(base?: I): StatusResponse {
+  create<I extends Exact<DeepPartial<StatusResponse>, I>>(
+    base?: I,
+  ): StatusResponse {
     return StatusResponse.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StatusResponse>, I>>(object: I): StatusResponse {
+  fromPartial<I extends Exact<DeepPartial<StatusResponse>, I>>(
+    object: I,
+  ): StatusResponse {
     const message = createBaseStatusResponse();
     message.context = object.context ?? "";
     message.version = object.version ?? "";
@@ -149,17 +167,31 @@ export const StatusResponse = {
   },
 };
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : Partial<T>;
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends globalThis.Array<infer U>
+    ? globalThis.Array<DeepPartial<U>>
+    : T extends ReadonlyArray<infer U>
+      ? ReadonlyArray<DeepPartial<U>>
+      : T extends {}
+        ? { [K in keyof T]?: DeepPartial<T[K]> }
+        : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
+      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
+    };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

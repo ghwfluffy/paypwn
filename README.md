@@ -96,7 +96,15 @@ You can add an npm package by using the devserver container.
 ```
 $ ./devserver/mount-console.sh
 devserver>~/git/paypwn$ cd paybuddy/vue
-devserver>~/git/paypwn/paybuddy/vue$ npm install blah
+devserver>~/git/paypwn/paybuddy/vue$ npm install eslint --save-dev
+```
+
+#### Lint/Format code
+
+You can run eslint and prettier in the devserver container. They will automatically write fixes to your local files.
+
+```
+./devserver/lint.sh
 ```
 
 ### Back-end
