@@ -125,7 +125,7 @@ docker compose build
 
 #### Protobuf Changes
 
-You need to rebuild the containers in order to compile new protobuf updates. Protobuf definitions are compiled to python, pydantic, and typescript.
+You need to rebuild the containers in order to compile new protobuf updates. Protobuf definitions are compiled to python, pydantic, mypy, and typescript.
 
 ```
 docker compose build

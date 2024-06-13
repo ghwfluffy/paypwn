@@ -27,7 +27,7 @@ COPY ./paybuddy/vue /var/paypwn/paybuddy/vue
 COPY ./paybuddy/python /var/paypwn/paybuddy/python
 COPY ./paybuddy/api /var/paypwn/paybuddy/api
 COPY ./mypy.ini /var/paypwn/paybuddy/
-COPY setup /setup
+COPY ./setup /setup
 
 # Build front-end
 ENV NPM_CONFIG_TMP="npm"
