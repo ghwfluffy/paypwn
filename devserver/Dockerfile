@@ -16,6 +16,15 @@ ENV NPM_CONFIG_PREFIX="npm"
 # Dependencies
 RUN set -eux; \
     apk add --no-cache \
+        nginx \
         npm \
         ; \
     true
+
+# Copy nginx configuration
+COPY ./devserver/etc/nginx.conf /etc/nginx/nginx.conf
+COPY ./devserver/etc/forward_api.conf /etc/nginx/forward_api.conf
+COPY ./devserver/etc/forward_dev.conf /etc/nginx/forward_dev.conf
+
+COPY ./devserver/bin/entrypoint /entrypoint
+ENTRYPOINT ["/entrypoint"]

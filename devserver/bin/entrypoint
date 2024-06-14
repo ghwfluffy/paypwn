@@ -1,0 +1,27 @@
+#!/bin/ash
+
+set -eu -o pipefail
+
+PIDS=""
+
+# PayBuddy
+cd /var/paypwn/paybuddy/vue
+npm install
+npm run dev &
+PIDS="${PIDS} ${!}"
+
+# nginx
+nginx -g 'daemon off;' &
+PIDS="${PIDS} ${!}"
+
+# Cleanup all processes on exit
+cleanup() {
+    for pid in ${PIDS}; do
+        kill -TERM "$pid" 2>/dev/null || true
+    done
+    killall nginx
+}
+trap cleanup EXIT INT TERM
+
+# Wait for anything to terminate
+wait -n ${PIDS}
