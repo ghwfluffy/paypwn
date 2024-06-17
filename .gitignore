@@ -2,6 +2,9 @@
 node_modules
 dist
 paybuddy/vue/npm/_*
+.mypy_cache
+__pycache__
 
 outfile.tmp
 commit-message.txt
+secrets/

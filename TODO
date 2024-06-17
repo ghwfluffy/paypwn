@@ -53,3 +53,8 @@
 [ ] tls cert
 [ ] dns
 [ ] SNI
+[ ] twilio?
+[ ] easter eggs
+    [ ] admin admin
+    [ ] ghw endpoint
+    [ ] fake ssh

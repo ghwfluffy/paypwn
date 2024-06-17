@@ -10,6 +10,7 @@ if [ ! -d venv ]; then
     # Install depdendencies
     pip3 install --upgrade pip
     pip3 install -r python/requirements.txt
+    pip3 install -r ../shared/python/requirements.txt
 else
     source venv/bin/activate
 fi
@@ -17,8 +18,8 @@ fi
 # Compile protobuf to python
 mkdir -p protopy/pbdantic protopy/mypy
 python3 -m grpc_tools.protoc \
-    -I=./api \
+    -I=./proto \
     --python_out=./protopy \
     --protobuf-to-pydantic_out=./protopy/pbdantic \
     --mypy_out=./protopy/mypy \
-    $(ls ./api)
+    $(find ./proto -type f)

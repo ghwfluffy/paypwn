@@ -117,10 +117,10 @@ If you make a change to a python file, you can reload the running container with
 docker compose restart paypwn
 ```
 
-If you want to run the linter (mypy) on your python files, you can rebuild the docker images.
+If you want to run the linter (mypy) on your python files you can use the following script.
 
 ```
-docker compose build
+./devserver/mypy.sh
 ```
 
 #### Protobuf Changes

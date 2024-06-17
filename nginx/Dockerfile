@@ -44,7 +44,8 @@ RUN set -eux; \
 
 # Get paypwn front-end/build files
 COPY ./paybuddy/vue /var/paypwn/paybuddy/vue
-COPY ./paybuddy/api /var/paypwn/paybuddy/api
+COPY ./paybuddy/proto /var/paypwn/paybuddy/proto
+COPY ./shared/proto /var/paypwn/paybuddy/proto/paypwn
 COPY ./setup /setup
 
 # Protobuf build dependencies
@@ -74,7 +75,7 @@ RUN set -eux; \
         ; \
     rm -rf \
         /setup \
-        /var/paypwn/paybuddy/api \
+        /var/paypwn/paybuddy/proto \
         /var/paypwn/paybuddy/vue \
         ; \
     true

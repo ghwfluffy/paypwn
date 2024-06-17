@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package paypwn;
+
+/**
+ * The paypwn websites
+ */
+enum Site {
+    // Invalid
+    Unknown = 0;
+    // Imitation PayPal
+    PayBuddy = 1;
+    // Imitation Hotmail
+    Coldmail = 2;
+    // Imitation eBay
+    eBid = 3;
+    // Imitation Facebook
+    Friendbook = 4;
+}

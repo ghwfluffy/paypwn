@@ -5,7 +5,7 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
   base: "/paybuddy/",
   plugins: [vue()],
-  /*dev*/server: {
+  /*dev*/ server: {
     port: 8180,
     watch: {
       usePolling: true,

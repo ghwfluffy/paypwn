@@ -1,0 +1,42 @@
+FROM alpine:3
+
+LABEL maintainer="GhwFluffy <ghw@ghwfluffy.com>"
+LABEL description="PayPwn python linter"
+
+ENV LANG="en_US.utf8"
+ENV LC_ALL="en_US.utf8"
+ENV LANGUAGE="en_US:en"
+
+ENV PS1="paypwn-mypy>\\w$ "
+
+# Dependencies
+RUN set -eux; \
+    apk add --no-cache \
+        build-base \
+        postgresql16-client \
+        postgresql16-dev \
+        protobuf-dev \
+        py3-virtualenv \
+        python3 \
+        python3-dev \
+        ; \
+    true
+
+# Copy web files
+COPY ./paybuddy/python/requirements.txt /var/paypwn/paybuddy/python/requirements.txt
+COPY ./shared/python/requirements.txt /var/paypwn/shared/python/requirements.txt
+COPY ./paybuddy/proto /var/paypwn/paybuddy/proto
+COPY ./shared/proto /var/paypwn/paybuddy/proto/paypwn
+COPY ./mypy.ini /var/paypwn/paybuddy/
+COPY ./setup /setup
+
+# Setup python runtime environment
+SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
+RUN \
+    cd /var/paypwn/paybuddy; /setup/setup-venv; \
+    /setup/setup-mypy; \
+    true
+
+# Lint python
+WORKDIR "/var/paypwn/paybuddy"
+ENTRYPOINT ["/setup/run-mypy"]

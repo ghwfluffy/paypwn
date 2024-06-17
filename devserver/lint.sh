@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eux -o pipefail
+set -eu -o pipefail
 
 # Go to build script directory
 TOPDIR="$(dirname $(readlink -f "${0}"))/.."
@@ -8,7 +8,7 @@ cd "${TOPDIR}"
 
 source .env
 docker run \
-    -ti \
+    -t \
     --workdir "$(pwd)" \
     -v "$(pwd):$(pwd):rw" \
     -v "/etc/passwd:/etc/passwd:ro" \

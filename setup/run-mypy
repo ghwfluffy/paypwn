@@ -2,7 +2,13 @@
 
 set -eu
 
+BASEDIR=/var/paypwn/$(basename $(realpath .))
+
 # Lint with mypy
-source ./venv/bin/activate
-export PYTHONPATH=./protopy/mypy:./protopy:./protopy/pbdantic
-mypy --check-untyped-defs ./protopy/mypy ./protopy/pbdantic ./python
+source "${BASEDIR}/venv/bin/activate"
+export PYTHONPATH="${BASEDIR}/protopy/mypy"
+export PYTHONPATH="${PYTHONPATH}:${BASEDIR}/protopy"
+export PYTHONPATH="${PYTHONPATH}:${BASEDIR}/protopy/pbdantic"
+export PYTHONPATH="${PYTHONPATH}:../shared/python"
+mypy --check-untyped-defs \
+    ./python

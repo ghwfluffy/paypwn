@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+import "paypwn/Site.proto";
+
+package paypwn;
+
+/**
+ * A user registered on one of the websites
+ */
+message User {
+    // Unique ID
+    string uuid = 1;
+    // Which site is this user for
+    Site site = 2;
+    // Is this an auto generated bot account?
+    bool bot = 3;
+    // Login username
+    string username = 4;
+    // bcrypt password
+    string password = 5;
+    // Email address
+    string email = 6;
+    // Phone number for dual-factor OTP
+    string mobile_number = 7;
+    // First name
+    string given_name = 8;
+    // Last name
+    string surname = 9;
+    // Shipping address
+    string address = 10;
+}

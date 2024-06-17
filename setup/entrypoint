@@ -7,7 +7,7 @@ PIDS=""
 # Start paybuddy
 cd /var/paypwn/paybuddy
 source venv/bin/activate
-export PYTHONPATH=python:protopy
+export PYTHONPATH=python:protopy:../shared/python
 python3 ./python/main.py &
 PIDS="${PIDS} ${!}"
 

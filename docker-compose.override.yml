@@ -18,6 +18,8 @@ services:
 
   paypwn:
     volumes:
+      - ./setup/entrypoint:/var/paypwn/entrypoint
+      - ./shared/python:/var/paypwn/shared/python
       - ./paybuddy/python:/var/paypwn/paybuddy/python
 
   postgres:

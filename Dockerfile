@@ -15,6 +15,7 @@ RUN set -eux; \
         build-base \
         npm \
         postgresql16-client \
+        postgresql16-dev \
         protobuf-dev \
         py3-virtualenv \
         python3 \
@@ -25,7 +26,9 @@ RUN set -eux; \
 # Copy web files
 COPY ./paybuddy/vue /var/paypwn/paybuddy/vue
 COPY ./paybuddy/python /var/paypwn/paybuddy/python
-COPY ./paybuddy/api /var/paypwn/paybuddy/api
+COPY ./shared/python /var/paypwn/shared/python
+COPY ./paybuddy/proto /var/paypwn/paybuddy/proto
+COPY ./shared/proto /var/paypwn/paybuddy/proto/paypwn
 COPY ./mypy.ini /var/paypwn/paybuddy/
 COPY ./setup /setup
 
@@ -41,6 +44,7 @@ RUN set -eux; \
 # Setup python runtime environment
 RUN set -eux; \
     cd /var/paypwn/paybuddy; /setup/setup-venv; \
+    /setup/setup-mypy; \
     true
 
 # Lint python
@@ -56,11 +60,12 @@ RUN set -eux; \
 # Cleanup
 RUN set -eux; \
     cd /var/paypwn/paybuddy; \
-    rm -rf api protopy/mypy vue mypy.ini .mypy_cache; \
+    rm -rf proto protopy/mypy vue mypy.ini .mypy_cache; \
     rm -rf /setup; \
     apk del \
         build-base \
         npm \
+        postgresql16-dev \
         protobuf-dev \
         py3-virtualenv \
         python3-dev \
