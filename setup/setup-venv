@@ -22,4 +22,4 @@ python3 -m grpc_tools.protoc \
     --python_out=./protopy \
     --protobuf-to-pydantic_out=./protopy/pbdantic \
     --mypy_out=./protopy/mypy \
-    $(find ./proto -type f)
+    $(find ./proto -type f -name '*.proto')

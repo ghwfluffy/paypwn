@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package paybuddy;
+
+/**
+ * Single transfer from transfer history
+ */
+message Transfer {
+    // Transfer ID
+    string uuid = 1;
+    // User ID of sender
+    string sender_uuid = 2;
+    // User ID of receiver
+    string receiver_uuid = 3;
+    // Unix timestamp of transfer time
+    int64 transfer_time = 4;
+    // Whole dollars
+    int64 dollars = 5;
+    // Partial dollars
+    int32 cents = 6;
+    // User provided notes
+    string notes = 7;
+}

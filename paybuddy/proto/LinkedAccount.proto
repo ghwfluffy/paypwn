@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package paybuddy;
+
+/**
+ * Type of linked account
+ */
+enum AccountType {
+    // Invalid selection
+    Unknown = 0;
+    // Bank with routing
+    BankAccount = 1;
+    // Credit card
+    BankCard = 2;
+}
+
+/**
+ * Details of a linked bank account
+ */
+message BankInformation {
+    // Bank name
+    string bank = 1;
+    // Routing number
+    string routing = 2;
+    // Account number
+    string account = 3;
+}
+
+/**
+ * Details of a linked credit card
+ */
+message CardInformation {
+    // Name on card
+    string cardholder = 1;
+    // Account number
+    string account_number = 2;
+    // Verification code
+    int32 cvv = 3;
+    // Expiration month (1-12)
+    int32 expiration_month = 4;
+    // Expiration year (4 digit)
+    int32 expiration_year = 5;
+}
+
+/**
+ * Single transfer from transfer history
+ */
+message LinkedAccount {
+    // Account ID
+    string uuid = 1;
+    // User ID
+    string user_uuid = 2;
+    // Name for the account
+    string account_name = 3;
+    // Type of linked account
+    AccountType account_type = 4;
+    // Priority in wallet (0=Highest)
+    int32 rank = 5;
+    // Whether the account is verified
+    bool verified = 6;
+
+    oneof details {
+        // Linked bank information
+        BankInformation bank_information = 10;
+        // Link credit card information
+        CardInformation card_information = 11;
+    }
+}

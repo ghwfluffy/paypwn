@@ -1,12 +1,12 @@
 import uuid
 
-from sqlalchemy import Column, String, Boolean
-from sqlalchemy.dialects.postgresql import UUID as PSQL_UUID
+from sqlalchemy import Column, String, Boolean, BigInteger
 from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 from sqlalchemy.engine.base import Engine
 from sqlalchemy_utils import UUIDType
 
 from paypwn.User_pb2 import User as User_pb2
+from paypwn.User_pb2 import LoginActivity as LoginActivity_pb2
 from paypwn.Site_pb2 import Site as Site_pb2
 
 Base: DeclarativeMeta = declarative_base()
@@ -51,6 +51,42 @@ class User(Base):
             given_name=user.given_name,
             surname=user.surname,
             address=user.address,
+        )
+
+    @classmethod
+    def create(cls, engine: Engine) -> None:
+        from sqlalchemy.orm import sessionmaker
+        Session = sessionmaker(bind=engine)
+        session = Session()
+
+        Base.metadata.create_all(engine)
+
+class LoginActivity(Base):
+    __tablename__ = 'login_activity'
+
+    uuid = Column(UUIDType(binary=False), primary_key=True, default=uuid.uuid4)
+    user_uuid = Column(UUIDType(binary=False), default=uuid.uuid4)
+    login_time = Column(BigInteger, primary_key=True)
+    success = Column(Boolean)
+    ip_address = Column(String)
+
+    def to_protobuf(self) -> LoginActivity_pb2:
+        entry = LoginActivity_pb2()
+        entry.uuid = str(self.uuid)
+        entry.user_uuid = str(self.user_uuid)
+        entry.login_time = int(self.login_time)
+        entry.success = bool(self.success)
+        entry.ip_address = str(self.ip_address)
+        return entry
+
+    @classmethod
+    def from_protobuf(cls, entry: LoginActivity_pb2) -> 'LoginActivity':
+        return cls(
+            uuid=uuid.UUID(entry.uuid),
+            user_uuid=uuid.UUID(entry.user_uuid),
+            login_time=entry.login_time,
+            success=entry.success,
+            ip_address=entry.ip_address,
         )
 
     @classmethod

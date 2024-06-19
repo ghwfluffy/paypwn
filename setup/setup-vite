@@ -15,7 +15,7 @@ protoc \
     --ts_proto_out=./src/proto \
     --ts_proto_opt=outputJsonMethods=true,outputClientImpl=true,esModuleInterop=true \
     --proto_path=../proto \
-    $(find ../proto -type f)
+    $(find ../proto -type f -name '*.proto')
 
 # Build vue
 npm run build

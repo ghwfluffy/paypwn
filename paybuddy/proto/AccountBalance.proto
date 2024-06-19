@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package paybuddy;
+
+/**
+ * Current account balance for a user
+ */
+message AccountBalance {
+    // User ID
+    string user_uuid = 1;
+    // Account balance whole dollars
+    int64 current_dollars = 2;
+    // Account balance partial dollars
+    int32 current_cents = 3;
+}

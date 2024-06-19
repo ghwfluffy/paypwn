@@ -29,3 +29,19 @@ message User {
     // Shipping address
     string address = 10;
 }
+
+/**
+ * Record login activity of a user
+ */
+message LoginActivity {
+    // UUID of this login attempt
+    string uuid = 1;
+    // User ID
+    string user_uuid = 2;
+    // Unix timestamp of login attempt
+    int64 login_time = 3;
+    // Login successful or failed
+    bool success = 4;
+    // IP address of login attempt
+    string ip_address = 5;
+}

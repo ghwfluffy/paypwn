@@ -1,3 +1,4 @@
+[ ] alembic
 [ ] pina
 [ ] celery
 [ ] OpenAI integration
@@ -15,7 +16,20 @@
     [ ] Broken links
         [ ] Compose
         [ ] Reply/Forward
-[ ] PayBuddy
+[\] PayBuddy
+    [ ] shared api
+        - login
+        - get login status
+        - get login activity
+        - create login
+    [ ] paybuddy api
+        - get account balance
+        - get transfers list
+        - get transfer
+        - post transfer
+        - get linked accounts
+        - get linked account (censored)
+        - post linked accounts
     [ ] Landing page
     [ ] Sign up
     [ ] Login
