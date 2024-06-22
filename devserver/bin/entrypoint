@@ -11,7 +11,7 @@ npm run dev &
 PIDS="${PIDS} ${!}"
 
 # nginx
-nginx -g 'daemon off;' &
+sudo /usr/sbin/nginx -g 'daemon off;' &
 PIDS="${PIDS} ${!}"
 
 # Cleanup all processes on exit

@@ -3,10 +3,10 @@ import uuid
 from sqlalchemy import Column, BigInteger
 from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 from sqlalchemy.engine.base import Engine
-from sqlalchemy_utils import UUIDType
+from sqlalchemy_utils import UUIDType # type: ignore
 from sqlalchemy.orm import Mapped
 
-from AccountBalance_pb2 import AccountBalance as AccountBalance_pb2
+from paybuddy_pb.AccountBalance_pb2 import AccountBalance as AccountBalance_pb2
 
 Base: DeclarativeMeta = declarative_base()
 

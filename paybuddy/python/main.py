@@ -1,14 +1,20 @@
+import uvicorn
+
 from fastapi import FastAPI, Depends
 from google.protobuf.json_format import MessageToDict, ParseDict
 
-from sqlalchemy import create_engine
+from sqlalchemy import Engine
 
-from api.Status_pb2 import StatusRequest, StatusResponse
+from paybuddy_pb.api.Status_pb2 import StatusRequest, StatusResponse
+from paybuddy_pb.api.Status_p2p import StatusRequest as StatusRequestModel
+from paybuddy_pb.api.Status_p2p import StatusResponse as StatusResponseModel
 
-from pbdantic.api.Status_p2p import StatusRequest as StatusRequestModel
-from pbdantic.api.Status_p2p import StatusResponse as StatusResponseModel
+from paypwn.db.connect import connect_db
 
-from db.user import User
+from paypwn.db.user import User
+from paybuddy.db.account_balance import AccountBalance
+from paybuddy.db.linked_account import LinkedAccount
+from paybuddy.db.transfer import Transfer
 
 app = FastAPI()
 
@@ -23,10 +29,11 @@ async def get_status(params: StatusRequestModel = Depends()):
     return MessageToDict(response)
 
 if __name__ == "__main__":
-    DATABASE_URL = "postgresql+psycopg2://paypwn:paypwn@postgres/paypwn"
 
-    engine = create_engine(DATABASE_URL)
+    engine: Engine = connect_db()
     User.create(engine)
+    AccountBalance.create(engine)
+    LinkedAccount.create(engine)
+    Transfer.create(engine)
 
-    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8080)

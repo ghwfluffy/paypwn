@@ -23,11 +23,10 @@ RUN set -eux; \
     true
 
 # Copy web files
-COPY ./paybuddy/python/requirements.txt /var/paypwn/paybuddy/python/requirements.txt
-COPY ./shared/python/requirements.txt /var/paypwn/shared/python/requirements.txt
+COPY ./paybuddy/python /var/paypwn/paybuddy/python
+COPY ./shared/python /var/paypwn/shared/python
 COPY ./paybuddy/proto /var/paypwn/paybuddy/proto
-COPY ./shared/proto /var/paypwn/paybuddy/proto/paypwn
-COPY ./mypy.ini /var/paypwn/paybuddy/
+COPY ./shared/proto /var/paypwn/shared/proto
 COPY ./setup /setup
 
 # Setup python runtime environment
@@ -38,5 +37,5 @@ RUN \
     true
 
 # Lint python
-WORKDIR "/var/paypwn/paybuddy"
-ENTRYPOINT ["/setup/run-mypy"]
+COPY ./devserver/bin/entrypoint.mypy /entrypoint
+ENTRYPOINT ["/entrypoint"]

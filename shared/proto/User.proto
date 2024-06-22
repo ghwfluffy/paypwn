@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-import "paypwn/Site.proto";
+import "Site.proto";
 
 package paypwn;
 

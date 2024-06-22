@@ -1,38 +1,48 @@
-<script setup lang="ts">
-import { ref } from "vue";
-
-defineProps<{ msg: string }>();
-
-const count = ref(0);
-</script>
-
 <template>
   <h1>{{ msg }}</h1>
 
   <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
-    <p>
-      Edit
-      <code>components/HelloWorld.vue</code> to test HMR
-    </p>
+    <button type="button" @click="getStatus()">
+      {{ serverStatus }}
+    </button>
   </div>
-
-  <p>
-    Check out
-    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-      >create-vue</a
-    >, the official Vue + Vite starter
-  </p>
-  <p>
-    Install
-    <a href="https://github.com/vuejs/language-tools" target="_blank">Volar</a>
-    in your IDE for a better DX
-  </p>
-  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
 </template>
 
-<style scoped>
-.read-the-docs {
-  color: #888;
+<script setup lang="ts">
+import { ref } from "vue";
+import { StatusRequest, StatusResponse } from "@/proto/api/Status";
+
+defineProps<{ msg: string }>();
+
+const serverStatus = ref("Uninitialized");
+
+async function getStatus() {
+  // Create request
+  const request = StatusRequest.create({});
+  request.context = "Hello World.";
+
+  // Serialize the request to a binary format
+  const requestData = StatusRequest.toJSON(request);
+
+  // Convert JSON object to URL query string
+  const queryParams = new URLSearchParams(requestData as string[][]).toString();
+
+  try {
+    // Send the GET request to the server with query parameters
+    const response = await fetch(`api/status?${queryParams}`, {
+      method: 'GET',
+    });
+
+    // Read the response as an ArrayBuffer
+    const responseData = await response.json();
+
+    // Parse the response
+    const statusResponse = StatusResponse.fromJSON(responseData);
+
+    // Update the serverStatus
+    serverStatus.value = "Server version: " + statusResponse.version;
+  } catch (error) {
+    serverStatus.value = "Error fetching status: " + String(error);
+  }
 }
-</style>
+</script>

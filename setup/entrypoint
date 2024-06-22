@@ -2,12 +2,22 @@
 
 set -eu -o pipefail
 
+# Wait for postgres
+until pg_isready -h "${PGHOST}" -p "${PGPORT}" -U "${PGUSER}"; do
+    echo "Waiting for PostgreSQL to be available..."
+    sleep 2
+done
+
 PIDS=""
 
 # Start paybuddy
 cd /var/paypwn/paybuddy
 source venv/bin/activate
-export PYTHONPATH=python:protopy:../shared/python
+export PYTHONPATH="./python"
+export PYTHONPATH="${PYTHONPATH}:../shared/python"
+export PYTHONPATH="${PYTHONPATH}:./backend"
+export PYTHONPATH="${PYTHONPATH}:./backend/paypwn_pb"
+export PYTHONPATH="${PYTHONPATH}:./backend/paybuddy_pb"
 python3 ./python/main.py &
 PIDS="${PIDS} ${!}"
 

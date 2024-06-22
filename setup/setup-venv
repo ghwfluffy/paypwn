@@ -2,6 +2,8 @@
 
 set -eu
 
+PROJECT="$(basename $(realpath .))"
+
 # Create virtual environment
 if [ ! -d venv ]; then
     python3 -m venv venv
@@ -16,10 +18,18 @@ else
 fi
 
 # Compile protobuf to python
-mkdir -p protopy/pbdantic protopy/mypy
-python3 -m grpc_tools.protoc \
-    -I=./proto \
-    --python_out=./protopy \
-    --protobuf-to-pydantic_out=./protopy/pbdantic \
-    --mypy_out=./protopy/mypy \
-    $(find ./proto -type f -name '*.proto')
+protoc() {
+    local PROJECT="${1}"
+    local PROTODIR="${2}"
+    local OUTDIR="./backend/${PROJECT}_pb"
+    mkdir -p "${OUTDIR}"
+    python3 -m grpc_tools.protoc \
+        -I"${PROTODIR}" \
+        --python_out="${OUTDIR}" \
+        --protobuf-to-pydantic_out="${OUTDIR}" \
+        --mypy_out="${OUTDIR}" \
+        $(find "${PROTODIR}" -type f -name '*.proto')
+}
+
+protoc paypwn ../shared/proto
+protoc "${PROJECT}" ./proto

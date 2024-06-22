@@ -87,14 +87,14 @@ docker compose -f docker-compose.yml up -d
 
 #### Dev server
 
-Use port 8443 to see live updates to front-end changes.
+Use port 8443 to see live updates to front-end changes. Edit the ".env" file and set the DEVSERVER_UID and DEVSERVER_GID to match your user.
 
 #### Add npm package
 
 You can add an npm package by using the devserver container.
 
 ```
-$ ./devserver/mount-console.sh
+$ ./devserver/lint.sh --console
 devserver>~/git/paypwn$ cd paybuddy/vue
 devserver>~/git/paypwn/paybuddy/vue$ npm install eslint --save-dev
 ```
@@ -105,6 +105,12 @@ You can run eslint and prettier in the devserver container. They will automatica
 
 ```
 ./devserver/lint.sh
+```
+
+If you make changes to protobuf files or manual changes to packages.json you will need to rebuild the container.
+
+```
+./devserver/lint.sh --no-cache
 ```
 
 ### Back-end
@@ -123,6 +129,12 @@ If you want to run the linter (mypy) on your python files you can use the follow
 ./devserver/mypy.sh
 ```
 
+If you make changes to protobuf files or dependencies you will need to rebuild the container.
+
+```
+./devserver/mypy.sh --no-cache
+```
+
 #### Protobuf Changes
 
 You need to rebuild the containers in order to compile new protobuf updates. Protobuf definitions are compiled to python, pydantic, mypy, and typescript.
@@ -135,9 +147,4 @@ docker compose up -d
 
 #### Change SQL schema
 
-Updates to the SQL schema require editing ./database/init.sql and resetting the docker volumes.
-
-```
-docker compose down -v
-docker compose up -d
-```
+I am planning to add Alembic for SQLAlchemy database schema changes. Currently though to apply SQL schema changes (other than adding new tables), you need to reset the docker volumes or manually connect to and edit the postgres database.

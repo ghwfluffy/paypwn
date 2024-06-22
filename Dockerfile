@@ -24,12 +24,11 @@ RUN set -eux; \
     true
 
 # Copy web files
+COPY ./shared/python /var/paypwn/shared/python
+COPY ./shared/proto /var/paypwn/shared/proto
 COPY ./paybuddy/vue /var/paypwn/paybuddy/vue
 COPY ./paybuddy/python /var/paypwn/paybuddy/python
-COPY ./shared/python /var/paypwn/shared/python
 COPY ./paybuddy/proto /var/paypwn/paybuddy/proto
-COPY ./shared/proto /var/paypwn/paybuddy/proto/paypwn
-COPY ./mypy.ini /var/paypwn/paybuddy/
 COPY ./setup /setup
 
 # Build front-end

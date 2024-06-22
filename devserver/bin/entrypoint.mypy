@@ -1,0 +1,6 @@
+#!/bin/ash
+
+set -eu -o pipefail
+
+cd /var/paypwn/paybuddy
+/setup/run-mypy

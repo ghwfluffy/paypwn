@@ -1,4 +1,5 @@
 from uuid import UUID, uuid4
+from typing import Optional
 
 from sqlalchemy import String, Boolean, Integer, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
@@ -6,17 +7,17 @@ from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy_utils import UUIDType
 
-from LinkedAccount_pb2 import AccountType as AccountType_pb2
-from LinkedAccount_pb2 import LinkedAccount as LinkedAccount_pb2
-from LinkedAccount_pb2 import CardInformation as CardInformation_pb2
-from LinkedAccount_pb2 import BankInformation as BankInformation_pb2
+from paybuddy_pb.LinkedAccount_pb2 import AccountType as AccountType_pb2
+from paybuddy_pb.LinkedAccount_pb2 import LinkedAccount as LinkedAccount_pb2
+from paybuddy_pb.LinkedAccount_pb2 import CardInformation as CardInformation_pb2
+from paybuddy_pb.LinkedAccount_pb2 import BankInformation as BankInformation_pb2
 
 Base: DeclarativeMeta = declarative_base()
 
 class BankInformation(Base):
     __tablename__ = 'paybuddy_bank_information'
 
-    account_uuid: Mapped[UUID] = mapped_column(UUIDType(binary=False), primary_key=True, foreign_key=ForeignKey('paybuddy_linked_accounts.uuid'))
+    account_uuid: Mapped[UUID] = mapped_column(UUIDType(binary=False), ForeignKey('paybuddy_linked_accounts.uuid'), primary_key=True)
     bank: Mapped[str] = mapped_column(String)
     routing: Mapped[str] = mapped_column(String)
     account: Mapped[str] = mapped_column(String)
@@ -29,7 +30,7 @@ class BankInformation(Base):
 class CardInformation(Base):
     __tablename__ = 'paybuddy_card_information'
 
-    account_uuid: Mapped[UUID] = mapped_column(UUIDType(binary=False), primary_key=True, foreign_key=ForeignKey('paybuddy_linked_accounts.uuid'))
+    account_uuid: Mapped[UUID] = mapped_column(UUIDType(binary=False), ForeignKey('paybuddy_linked_accounts.uuid'), primary_key=True)
     cardholder: Mapped[str] = mapped_column(String)
     account_number: Mapped[str] = mapped_column(String)
     cvv: Mapped[int] = mapped_column(Integer)
@@ -51,14 +52,14 @@ class LinkedAccount(Base):
     rank: Mapped[int] = mapped_column(Integer)
     verified: Mapped[bool] = mapped_column(Boolean)
 
-    bank_information: Mapped['BankInformation' | None] = relationship(
+    bank_information: Mapped[Optional['BankInformation']] = relationship(
         "BankInformation",
         uselist=False,
         back_populates="linked_account",
         cascade="all, delete-orphan"
     )
 
-    card_information: Mapped['CardInformation' | None] = relationship(
+    card_information: Mapped[Optional['CardInformation']] = relationship(
         "CardInformation",
         uselist=False,
         back_populates="linked_account",

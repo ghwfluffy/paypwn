@@ -2,7 +2,7 @@
 
 set -eu -o pipefail
 
-for protodir in $(find /var/paypwn -type d -name protopy); do
+for protodir in $(find /var/paypwn -type d -name '*_pb'); do
     for dir in $(find "${protodir}" -type d); do
         touch "${dir}/py.typed"
     done

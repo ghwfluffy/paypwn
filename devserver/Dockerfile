@@ -16,15 +16,34 @@ ENV NPM_CONFIG_PREFIX="npm"
 # Dependencies
 RUN set -eux; \
     apk add --no-cache \
+        build-base \
         nginx \
         npm \
+        protobuf-dev \
+        sudo \
         ; \
+    true
+
+# Allow nginx to run as sudo
+RUN set -eux; \
+    echo 'ALL ALL=NOPASSWD: /usr/sbin/nginx' >> /etc/sudoers.d/00-nginx; \
+    chmod 0440 /etc/sudoers.d/00-nginx; \
     true
 
 # Copy nginx configuration
 COPY ./devserver/etc/nginx.conf /etc/nginx/nginx.conf
 COPY ./devserver/etc/forward_api.conf /etc/nginx/forward_api.conf
 COPY ./devserver/etc/forward_dev.conf /etc/nginx/forward_dev.conf
+
+# Build protobufs
+COPY ./shared/proto /var/paypwn/shared/proto
+COPY ./paybuddy/vue /var/paypwn/paybuddy/vue
+COPY ./paybuddy/proto /var/paypwn/paybuddy/proto
+COPY ./setup/setup-vite /setup/setup-vite
+RUN set -eux; \
+    cd /var/paypwn/paybuddy; \
+    /setup/setup-vite; \
+    true
 
 COPY ./devserver/bin/entrypoint /entrypoint
 ENTRYPOINT ["/entrypoint"]

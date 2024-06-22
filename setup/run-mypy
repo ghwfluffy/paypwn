@@ -1,13 +1,25 @@
 #!/bin/ash
 
 set -eu
-BASEDIR=/var/paypwn/$(basename $(realpath .))
+
+PROJECT="$(basename $(realpath .))"
+BASEDIR="/var/paypwn/${PROJECT}"
+SHAREDDIR="/var/paypwn/shared"
 
 # Lint with mypy
 source "${BASEDIR}/venv/bin/activate"
-export PYTHONPATH="${BASEDIR}/protopy/mypy"
-export PYTHONPATH="${PYTHONPATH}:${BASEDIR}"
-export PYTHONPATH="${PYTHONPATH}:${BASEDIR}/protopy/pbdantic"
-export PYTHONPATH="${PYTHONPATH}:../shared/python"
-mypy --check-untyped-defs \
-    ./python
+(
+    cd python
+    export PYTHONPATH="."
+    export PYTHONPATH="${PYTHONPATH}:../../shared/python"
+    export PYTHONPATH="${PYTHONPATH}:${BASEDIR}/backend"
+    mypy --check-untyped-defs .
+)
+
+# Lint shared
+(
+    cd ../shared/python
+    export PYTHONPATH="."
+    export PYTHONPATH="${PYTHONPATH}:${BASEDIR}/backend"
+    mypy --check-untyped-defs .
+)
