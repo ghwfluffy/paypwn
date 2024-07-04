@@ -30,7 +30,7 @@ async function getStatus() {
   try {
     // Send the GET request to the server with query parameters
     const response = await fetch(`api/status?${queryParams}`, {
-      method: 'GET',
+      method: "GET",
     });
 
     // Read the response as an ArrayBuffer

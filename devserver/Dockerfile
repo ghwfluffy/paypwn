@@ -34,6 +34,8 @@ RUN set -eux; \
 COPY ./devserver/etc/nginx.conf /etc/nginx/nginx.conf
 COPY ./devserver/etc/forward_api.conf /etc/nginx/forward_api.conf
 COPY ./devserver/etc/forward_dev.conf /etc/nginx/forward_dev.conf
+COPY ./devserver/etc/forward_histoire.conf /etc/nginx/forward_histoire.conf
+COPY ./devserver/etc/forward_histoire_api.conf /etc/nginx/forward_histoire_api.conf
 
 # Build protobufs
 COPY ./shared/proto /var/paypwn/shared/proto
