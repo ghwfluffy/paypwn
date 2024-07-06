@@ -7,7 +7,7 @@ set -eu -o pipefail
 # --fix             automatically fix lint/format issues
 CHECK_CACHE=1
 INTERACTIVE=(-t)
-CMD=(-c 'cd paybuddy/vue && npm install && npm run lint-format')
+CMD=(-c 'cd paybuddy && /setup/setup-vite dev && cd vue && npm install && npm run lint')
 while [ ${#} -gt 0 ]; do
     if [ "${1}" == "--no-cache" ]; then
         CHECK_CACHE=0
@@ -19,7 +19,6 @@ while [ ${#} -gt 0 ]; do
     elif [ "${1}" == "--fix" ]; then
         for i in "${!CMD[@]}"; do
             CMD[$i]="${CMD[$i]//lint/relint}"
-            CMD[$i]="${CMD[$i]//format/reformat}"
         done
         shift
     else
