@@ -1,4 +1,4 @@
+mypy-protobuf
 psycopg2
 sqlalchemy
-sqlalchemy[mypy]
 sqlalchemy_utils

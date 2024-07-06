@@ -14,32 +14,22 @@ RUN set -eux; \
     apk add --no-cache \
         nginx \
         ; \
-    true
-
-# Save mime types and remove all other configuration
-RUN set -eux; \
+    # Save mime types and remove all other configuration
     mv /etc/nginx/mime.types /tmp/; \
-    rm -rf /etc/nginx; \
+    # Remove unused files
+    rm -rf /usr/share/nginx /etc/nginx; \
     true
 
 # Copy nginx configuration
 COPY ./nginx/etc /etc/nginx
 COPY ./nginx/html /var/paypwn/html
 
-# Restore mime types
 RUN set -eux; \
+    # Restore mime types
     mv /tmp/mime.types /etc/nginx/mime.types; \
-    true
-
-# Set ownership
-RUN set -eux; \
+    # Set ownership
     chown -R root:root /etc/nginx; \
     chmod 0644 -R /etc/nginx; \
-    true
-
-# Remove unused files
-RUN set -eux; \
-    rm -rf /usr/share/nginx; \
     true
 
 # Get paypwn front-end/build files
@@ -48,26 +38,21 @@ COPY ./shared/proto /var/paypwn/shared/proto
 COPY ./paybuddy/proto /var/paypwn/paybuddy/proto
 COPY ./setup /setup
 
-# Protobuf build dependencies
+ENV NPM_CONFIG_TMP="npm"
+ENV NPM_CONFIG_CACHE="npm"
+ENV NPM_CONFIG_PREFIX="npm"
+
 RUN set -eux; \
+    # Protobuf build dependencies
     apk add --no-cache \
         build-base \
         npm \
         protobuf-dev \
         ; \
-    true
-
-# Build front-end
-ENV NPM_CONFIG_TMP="npm"
-ENV NPM_CONFIG_CACHE="npm"
-ENV NPM_CONFIG_PREFIX="npm"
-RUN set -eux; \
+    # Build front-end
     cd /var/paypwn/paybuddy; /setup/setup-vite; \
     mv vue/dist www; \
-    true
-
-# Cleanup
-RUN set -eux; \
+    # Cleanup
     apk del --no-cache \
         build-base \
         npm \

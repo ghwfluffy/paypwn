@@ -9,8 +9,16 @@ ENV LANGUAGE="en_US:en"
 
 ENV PS1="paypwn-mypy>\\w$ "
 
-# Dependencies
-RUN set -eux; \
+# Copy web files
+COPY ./paybuddy/python /var/paypwn/paybuddy/python
+COPY ./shared/python /var/paypwn/shared/python
+COPY ./paybuddy/proto /var/paypwn/paybuddy/proto
+COPY ./shared/proto /var/paypwn/shared/proto
+COPY ./setup /setup
+
+SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
+RUN \
+    # Dependencies
     apk add --no-cache \
         build-base \
         postgresql16-client \
@@ -20,20 +28,29 @@ RUN set -eux; \
         python3 \
         python3-dev \
         ; \
-    true
-
-# Copy web files
-COPY ./paybuddy/python /var/paypwn/paybuddy/python
-COPY ./shared/python /var/paypwn/shared/python
-COPY ./paybuddy/proto /var/paypwn/paybuddy/proto
-COPY ./shared/proto /var/paypwn/shared/proto
-COPY ./setup /setup
-
-# Setup python runtime environment
-SHELL ["/bin/ash", "-euo", "pipefail", "-c"]
-RUN \
-    cd /var/paypwn/paybuddy; /setup/setup-venv; \
-    /setup/setup-mypy; \
+    # Setup python runtime environment
+    cd /var/paypwn/paybuddy; \
+        /setup/setup-venv dev; \
+        /setup/setup-mypy; \
+    # Cleanup
+    rm -rf /setup /root/.cache; \
+    for eph in .mypy_cache proto; do \
+        find /var/paypwn \( -path '*/venv' -prune \) -and -name "${eph}" | { \
+            while read f; do rm -rf "${f}"; done; \
+        }; \
+    done ; \
+    find /var/paypwn -name __pycache__ | { \
+        while read f; do rm -rf "${f}"; done; \
+    }; \
+    # Remove no longer needed dependencies
+    apk del \
+        build-base \
+        postgresql16-client \
+        postgresql16-dev \
+        protobuf-dev \
+        py3-virtualenv \
+        python3-dev \
+        ; \
     true
 
 # Lint python

@@ -2,6 +2,12 @@
 
 set -eu
 
+DEV=0
+if [ ${#} -gt 0 ] && [ "${1}" == "dev" ]; then
+    DEV=1
+    shift
+fi
+
 PROJECT="$(basename $(realpath .))"
 
 # Create virtual environment
@@ -13,6 +19,10 @@ if [ ! -d venv ]; then
     pip3 install --upgrade pip
     pip3 install -r python/requirements.txt
     pip3 install -r ../shared/python/requirements.txt
+    if [ ${DEV} -eq 1 ]; then
+        pip3 install -r python/requirements.dev.txt
+        pip3 install -r ../shared/python/requirements.dev.txt
+    fi
 else
     source venv/bin/activate
 fi
@@ -23,12 +33,19 @@ protoc() {
     local PROTODIR="${2}"
     local OUTDIR="./backend/${PROJECT}_pb"
     mkdir -p "${OUTDIR}"
+
     python3 -m grpc_tools.protoc \
         -I"${PROTODIR}" \
         --python_out="${OUTDIR}" \
         --protobuf-to-pydantic_out="${OUTDIR}" \
-        --mypy_out="${OUTDIR}" \
         $(find "${PROTODIR}" -type f -name '*.proto')
+
+    if [ ${DEV} -eq 1 ]; then
+        python3 -m grpc_tools.protoc \
+            -I"${PROTODIR}" \
+            --mypy_out="${OUTDIR}" \
+            $(find "${PROTODIR}" -type f -name '*.proto')
+    fi
 }
 
 protoc paypwn ../shared/proto

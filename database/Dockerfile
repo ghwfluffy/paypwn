@@ -1,4 +1,4 @@
-FROM postgres:16
+FROM postgres:16-alpine
 
 LABEL maintainer="GhwFluffy <ghw@ghwfluffy.com>"
 LABEL description="PayPwn Database"

@@ -1,10 +1,7 @@
 fastapi[all]
 grpcio
 grpcio-tools
-mypy
-mypy-protobuf
 protobuf==4.25.3
 protobuf_to_pydantic
 pydantic
-types-protobuf
 uvicorn

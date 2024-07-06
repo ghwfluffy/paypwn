@@ -9,11 +9,17 @@ ENV LANGUAGE="en_US:en"
 
 ENV PS1="paypwn>\\w$ "
 
+# Copy web files
+COPY ./shared/python /var/paypwn/shared/python
+COPY ./shared/proto /var/paypwn/shared/proto
+COPY ./paybuddy/python /var/paypwn/paybuddy/python
+COPY ./paybuddy/proto /var/paypwn/paybuddy/proto
+COPY ./setup /setup
+
 # Dependencies
 RUN set -eux; \
     apk add --no-cache \
         build-base \
-        npm \
         postgresql16-client \
         postgresql16-dev \
         protobuf-dev \
@@ -21,49 +27,23 @@ RUN set -eux; \
         python3 \
         python3-dev \
         ; \
-    true
-
-# Copy web files
-COPY ./shared/python /var/paypwn/shared/python
-COPY ./shared/proto /var/paypwn/shared/proto
-COPY ./paybuddy/vue /var/paypwn/paybuddy/vue
-COPY ./paybuddy/python /var/paypwn/paybuddy/python
-COPY ./paybuddy/proto /var/paypwn/paybuddy/proto
-COPY ./setup /setup
-
-# Build front-end
-ENV NPM_CONFIG_TMP="npm"
-ENV NPM_CONFIG_CACHE="npm"
-ENV NPM_CONFIG_PREFIX="npm"
-RUN set -eux; \
-    cd /var/paypwn/paybuddy; /setup/setup-vite; \
-    mv vue/dist www; \
-    true
-
-# Setup python runtime environment
-RUN set -eux; \
-    cd /var/paypwn/paybuddy; /setup/setup-venv; \
-    /setup/setup-mypy; \
-    true
-
-# Lint python
-RUN set -eux; \
-    cd /var/paypwn/paybuddy; /setup/run-mypy; \
-    true
-
-# Entrypoint
-RUN set -eux; \
-    cp -v /setup/entrypoint /var/paypwn/; \
-    true
-
-# Cleanup
-RUN set -eux; \
+    # Setup python runtime environment
     cd /var/paypwn/paybuddy; \
-    rm -rf proto protopy/mypy vue mypy.ini .mypy_cache; \
-    rm -rf /setup; \
+        /setup/setup-venv; \
+    # Entrypoint
+    cp -v /setup/entrypoint /var/paypwn/; \
+    # Cleanup
+    rm -rf /setup /root/.cache; \
+    for eph in mypy .mypy_cache proto mypy.ini; do \
+        find /var/paypwn \( -path '*/venv' -prune \) -and -name "${eph}" | { \
+            while read f; do rm -rf "${f}"; done; \
+        }; \
+    done ; \
+    find /var/paypwn -name __pycache__ | { \
+        while read f; do rm -rf "${f}"; done; \
+    }; \
     apk del \
         build-base \
-        npm \
         postgresql16-dev \
         protobuf-dev \
         py3-virtualenv \
