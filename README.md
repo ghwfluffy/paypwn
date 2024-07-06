@@ -52,6 +52,37 @@ If you do not want to expose the devserver port, you can ignore the dev docker c
 docker compose -f docker-compose.yml up -d
 ```
 
+## Access
+
+To retrieve the IP at which the servers can be accessed you can use the ip.sh script.
+
+```
+./ip.sh
+```
+
+The sites and their API documentation can be visited in your browser. If "ip.sh" showed "172.31.0.2" as the IP address of the nginx container, you may visit the sites as such:
+
+```
+http://172.31.0.2
+http://172.31.0.2/paybuddy
+```
+
+### API Documentation
+
+The Swagger API documentation for each site can be found at the api/docs endpoint such as:
+
+```
+http://172.31.0.2/paybuddy/api/docs
+```
+
+### Histoire
+
+The devserver exposes the Histoire instances which allow testing individual front-end components. You would access the histoire endpoint of the devserver similar to the following:
+
+```
+http://172.31.0.3:8443/paybuddy/histoire
+```
+
 ## Docker Containers
 
 ### paypwn
@@ -80,6 +111,8 @@ docker compose -f docker-compose.yml up -d
 * devserver optionally sits in front of nginx and listens on port 8443
 * devserver is used to hot-reload changes to the vue files during front-end development
 * devserver proxies front-end requests to the mounted vue files, and all other requests to the nginx container
+* devserver also exposes a /histoire endpoint for each site with front-end stories
+    * Example: /paybuddy/histoire
 
 ## Development
 
@@ -101,10 +134,10 @@ devserver>~/git/paypwn/paybuddy/vue$ npm install eslint --save-dev
 
 #### Lint/Format code
 
-You can run eslint and prettier in the devserver container. They will automatically write fixes to your local files.
+You can run eslint and prettier in the devserver container. They will automatically write fixes to your local files if you use --fix.
 
 ```
-./devserver/lint.sh
+./devserver/lint.sh --fix
 ```
 
 If you make changes to protobuf files or manual changes to packages.json you will need to rebuild the container.
@@ -148,3 +181,15 @@ docker compose up -d
 #### Change SQL schema
 
 I am planning to add Alembic for SQLAlchemy database schema changes. Currently though to apply SQL schema changes (other than adding new tables), you need to reset the docker volumes or manually connect to and edit the postgres database.
+
+### Automated API testing
+
+The automated tests are written using the jest framework in typescript. The tests exist in the vue/src/tests directory of each front-end project. They are end-to-end tests that run against an instance of paypwn. Running the tests is fully encapsulated in the tests.sh script.
+
+```
+./devserver/tests.sh
+```
+
+#### GitHub CI
+
+The docker image builds, linters, and API tests run automatically on each commit to master.

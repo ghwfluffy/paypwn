@@ -27,7 +27,7 @@ async function getStatus() {
 
   try {
     // Send the GET request to the server with query parameters
-    const response = await axios.get("/api/status", {
+    const response = await axios.get("api/status", {
       params: requestData,
     });
 

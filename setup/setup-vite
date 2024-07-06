@@ -1,6 +1,6 @@
 #!/bin/ash
 
-set -eux -o pipefail
+set -eu -o pipefail
 
 # Building for dev?
 DEV=0

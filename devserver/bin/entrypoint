@@ -5,7 +5,9 @@ set -eu -o pipefail
 PIDS=""
 
 # PayBuddy
-cd /var/paypwn/paybuddy/vue
+cd /var/paypwn/paybuddy
+/setup/setup-vite dev
+cd vue
 npm install
 npm run dev &
 PIDS="${PIDS} ${!}"
