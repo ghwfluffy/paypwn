@@ -53,6 +53,7 @@ services:
         BUILDKIT_INLINE_CACHE: 1
     environment:
       - DOCKER_BUILDKIT=1
+      - RATE_LIMIT_ENABLED=${RATE_LIMIT_ENABLED}
     expose:
       - "80:80"
       - "443:443"

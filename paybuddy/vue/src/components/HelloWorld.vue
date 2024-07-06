@@ -10,6 +10,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import axios from "axios";
 import { StatusRequest, StatusResponse } from "@/proto/api/Status";
 
 defineProps<{ msg: string }>();
@@ -21,28 +22,30 @@ async function getStatus() {
   const request = StatusRequest.create({});
   request.context = "Hello World.";
 
-  // Serialize the request to a binary format
+  // Serialize the request to a JSON format
   const requestData = StatusRequest.toJSON(request);
-
-  // Convert JSON object to URL query string
-  const queryParams = new URLSearchParams(requestData as string[][]).toString();
 
   try {
     // Send the GET request to the server with query parameters
-    const response = await fetch(`api/status?${queryParams}`, {
-      method: "GET",
+    const response = await axios.get("/api/status", {
+      params: requestData,
     });
 
-    // Read the response as an ArrayBuffer
-    const responseData = await response.json();
-
     // Parse the response
-    const statusResponse = StatusResponse.fromJSON(responseData);
+    const statusResponse = StatusResponse.fromJSON(response.data);
 
     // Update the serverStatus
     serverStatus.value = "Server version: " + statusResponse.version;
   } catch (error) {
-    serverStatus.value = "Error fetching status: " + String(error);
+    // Handle Axios errors
+    if (axios.isAxiosError(error)) {
+      serverStatus.value =
+        "Error fetching status: " +
+        (error.response ? error.response.data : error.message);
+      // Other error
+    } else {
+      serverStatus.value = "Error fetching status: " + String(error);
+    }
   }
 }
 </script>

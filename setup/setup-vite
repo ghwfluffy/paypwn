@@ -2,11 +2,22 @@
 
 set -eux -o pipefail
 
+# Building for dev?
+DEV=0
+if [ ${#} -gt 0 ] && [ ${1} == "dev" ]; then
+    DEV=1
+    shift
+fi
+
 # Build paybuddy front-end
 cd vue
 
 # Install dependencies
-npm install
+if [ ${DEV} -eq 1 ]; then
+    npm install
+else
+    npm install --production
+fi
 
 # Compile protobuf to typescript
 mkdir -p src/proto

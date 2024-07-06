@@ -44,7 +44,7 @@ COPY ./paybuddy/proto /var/paypwn/paybuddy/proto
 COPY ./setup/setup-vite /setup/setup-vite
 RUN set -eux; \
     cd /var/paypwn/paybuddy; \
-    /setup/setup-vite; \
+    /setup/setup-vite dev; \
     true
 
 COPY ./devserver/bin/entrypoint /entrypoint

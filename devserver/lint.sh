@@ -4,6 +4,7 @@ set -eu -o pipefail
 
 # --no-cache        always rebuild docker
 # --console         drop into shell
+# --fix             automatically fix lint/format issues
 CHECK_CACHE=1
 INTERACTIVE=(-t)
 CMD=(-c 'cd paybuddy/vue && npm install && npm run lint-format')
@@ -15,6 +16,15 @@ while [ ${#} -gt 0 ]; do
         INTERACTIVE+=(-i)
         CMD=()
         shift
+    elif [ "${1}" == "--fix" ]; then
+        for i in "${!CMD[@]}"; do
+            CMD[$i]="${CMD[$i]//lint/relint}"
+            CMD[$i]="${CMD[$i]//format/reformat}"
+        done
+        shift
+    else
+        echo "Invalid argument ${1}." 1>&2
+        exit 1
     fi
 done
 
@@ -26,7 +36,7 @@ cd "${TOPDIR}"
 source .env
 
 # Build docker
-if [ ${CHECK_CACHE} -eq 0 ] || ! docker image ls | grep paypwn-mypy | grep "${PAYPWN_VERSION}" > /dev/null; then
+if [ ${CHECK_CACHE} -eq 0 ] || ! docker image ls | grep paypwn-devserver | grep "${PAYPWN_VERSION}" > /dev/null; then
     BUILDKIT_INLINE_CACHE=1 docker build -f ./devserver/Dockerfile -t "paypwn-devserver:${PAYPWN_VERSION}" .
 fi
 

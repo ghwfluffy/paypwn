@@ -1,0 +1,6 @@
+services:
+  devserver:
+    image: paypwn-devserver:${PAYPWN_VERSION}
+    restart: always
+    networks:
+      - paypwn
